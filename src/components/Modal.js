@@ -1,10 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Loadingimage from "../Images/loading.gif";
+import Successimage from "../Images/success.2.gif";
 
 export const Modal = () => {
     const [showModal, setShowModal] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
+    const [arnValue, setArnValue] = useState('');
+    const [isValidArn, setIsValidArn] = useState(true);
 
+    const handleArnChange = (event) => {
+        const { value } = event.target;
+        setArnValue(value);
+        validateArn(value);
+    };
+
+    const validateArn = (arn) => {
+        // Regular expression pattern for validating IAM ARN
+        const arnPattern = /^arn:aws:iam::\d{12}:role\/[a-zA-Z_0-9+=,.@\-_/]+$/;
+
+        setIsValidArn(arnPattern.test(arn));
+    };
     // const handleStartCreating = () => {
     //     setIsCreating(true);
 
@@ -15,27 +30,27 @@ export const Modal = () => {
     const handleStartCreating = async () => {
         setIsCreating(true);
         try {
-          const response = await fetch("https://3dte4reicf.execute-api.ap-south-1.amazonaws.com/elk-Deepakraj", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // Add any request body or additional headers if needed
-          });
-      
-          if (response.ok) {
-            // API call was successful
-            // Process the response or perform any necessary actions
-            console.log("API call Successfull");
-          } else {
-            // API call returned an error
-            console.error("API call failed:", response.status, response.statusText);
-          }
+            const response = await fetch("https://3dte4reicf.execute-api.ap-south-1.amazonaws.com/elk-Deepakraj", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                // Add any request body or additional headers if needed
+            });
+
+            if (response.ok) {
+                // API call was successful
+                // Process the response or perform any necessary actions
+                console.log("API call Successfull");
+            } else {
+                // API call returned an error
+                console.error("API call failed:", response.status, response.statusText);
+            }
         } catch (error) {
-          console.error("Error calling API:", error);
+            console.error("Error calling API:", error);
         }
-      };
-      
+    };
+
 
     return (
         <div className="justify-end flex px-5 py-5">
@@ -88,12 +103,35 @@ export const Modal = () => {
                                         >
                                             Provide your ARN
                                         </label>
-                                        <textarea
+                                        <input
                                             id="text"
-                                            className="w-full md:w-96 h-20 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 resize-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            className={`w-full md:w-96 h-20 bg-gray-50 border ${isValidArn ? 'border-gray-300' : 'border-red-500'
+                                                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 resize-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                                             placeholder="Paste your ARN here"
+                                            value={arnValue}
+                                            onChange={handleArnChange}
                                             required
                                         />
+                                        {!isValidArn && (
+                                            <p className="text-red-500 text-xs mt-1">
+                                                <svg
+                                                    className="inline-block w-4 h-4 mr-1 -mt-1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M6 18L18 6M6 6l12 12"
+                                                    />
+                                                </svg>
+                                                Invalid IAM ARN
+                                            </p>
+                                        )}
+
                                     </div>
 
                                     {!isCreating && (
@@ -121,7 +159,13 @@ export const Modal = () => {
                                     {isCreating && (
                                         <>
                                             <div className="p-4 rounded-lg">
+
+
                                                 <img src={Loadingimage} height="400" width="500" alt="GIF Image" />
+
+                                                <img src={Successimage} height="400" width="500" alt="GIF Image" />
+
+
                                                 <p className="text-gray-800 hover:text-blue-500">
                                                     Your Kibana IP: http://{ }:5601
                                                 </p>
