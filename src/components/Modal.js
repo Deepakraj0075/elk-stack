@@ -21,6 +21,7 @@ export const Modal = () => {
 
     const validateArn = (arn) => {
         const arnPattern = /^arn:aws:iam::\d{12}:role\/[a-zA-Z_0-9+=,.@\-_/]+$/;
+        // setIsValidArn(arn === "" || arnPattern.test(arn));
         setIsValidArn(arnPattern.test(arn));
     };
 
@@ -35,6 +36,10 @@ export const Modal = () => {
     };
 
     const handleStartCreating = async () => {
+        if (arnValue === "") {
+            alert("Please enter the ARN.");
+            return;
+        }
         setIsCreating(true);
         setTimeout(() => {
             setIsCreating(false);
