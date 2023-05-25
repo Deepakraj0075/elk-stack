@@ -32,7 +32,12 @@ export const Modal = () => {
         input.select();
         document.execCommand("copy");
         document.body.removeChild(input);
+    
         setIsCopied(true);
+    
+        setTimeout(() => {
+            setIsCopied(false);
+        }, 500);
     };
 
     const handleStartCreating = async () => {
@@ -183,17 +188,9 @@ export const Modal = () => {
                                                     <p className="text-black-800 hover:text-blue-500">
                                                         Your Kibana IP: http://{IP}:5601
                                                     </p>
-                                                    <button
-                                                        className="ml-2 focus:outline-none"
-                                                        onClick={handleCopyURL}
-                                                    >
+                                                    <button className="ml-2 focus:outline-none" onClick={handleCopyURL}>
                                                         {!isCopied ? (
-                                                            <img
-                                                                src={CopyIcon}
-                                                                height="20"
-                                                                width="20"
-                                                                alt="Copy Icon"
-                                                            />
+                                                            <img src={CopyIcon} height="20" width="20" alt="Copy Icon" />
                                                         ) : (
                                                             "Copied"
                                                         )}
